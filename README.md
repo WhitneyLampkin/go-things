@@ -1,5 +1,5 @@
 # Go Things
-_Random Golang programs_
+_A collection of random Golang programs._
 
 ## Go Streaming
 Lightweight example of writing and reading a stream of bytes using golang.
