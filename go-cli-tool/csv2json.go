@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"flag"
+	"fmt"
 	"os"
 )
 
@@ -13,8 +14,10 @@ type inputFile struct {
 	pretty    bool
 }
 
+// Gets user input from the terminal, validates it and returns the inputFile data and an error
 // <TODO: Should an interface be used here?>
 func getFileData() (inputFile, error) {
+	// Validate the number of arguments
 	if len(os.Args) < 2 {
 		return inputFile{}, errors.New("A filepath argument is required.")
 	}
@@ -32,15 +35,18 @@ func getFileData() (inputFile, error) {
 	// Non-flag argument
 	fileLocation := flag.Arg(0)
 
-	// Validation for separator value
+	// Validate separator value
 	if !(*separator == "comma" || *separator == "semicolon") {
 		return inputFile{}, errors.New("Invalid separator. Use comma or semicolon.")
 	}
 
-	// After validation, return struct with arguments
+	// Return inputFile with validated arguments
 	return inputFile{fileLocation, *separator, *pretty}, nil
 }
 
 func main() {
+	// Manual test
+	fileData, err := getFileData()
 
+	fmt.Println(fileData, err)
 }
