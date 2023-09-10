@@ -19,7 +19,7 @@ type inputFile struct {
 func getFileData() (inputFile, error) {
 	// Validate the number of arguments
 	if len(os.Args) < 2 {
-		return inputFile{}, errors.New("A filepath argument is required.")
+		return inputFile{}, errors.New("a filepath argument is required")
 	}
 
 	// Define flags for the separator and pretty arguments
@@ -37,7 +37,7 @@ func getFileData() (inputFile, error) {
 
 	// Validate separator value
 	if !(*separator == "comma" || *separator == "semicolon") {
-		return inputFile{}, errors.New("Invalid separator. Use comma or semicolon.")
+		return inputFile{}, errors.New("invalid separator. Use comma or semicolon")
 	}
 
 	// Return inputFile with validated arguments
