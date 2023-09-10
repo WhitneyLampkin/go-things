@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"os"
 	"reflect"
 	"testing"
 	//. "github.com/onsi/ginkgo/v2"
@@ -34,6 +36,15 @@ func Test_getFileData(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Saving the original os.Args reference
+			actualOsArgs := os.Args
+			// This defer function will run after the test is done
+			defer func() {
+				os.Args = actualOsArgs                                           // Restoring the original os.Args reference
+				flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError) // Reseting the Flag command line. So that we can parse flags again
+			}()
+
+			os.Args = tt.osArgs // Setting the specific command args for this test
 			got, err := getFileData()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("getFileData() error = %v, wantErr %v", err, tt.wantErr)
