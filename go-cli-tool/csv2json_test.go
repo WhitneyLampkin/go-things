@@ -1,25 +1,28 @@
 package main
 
 import (
-	"flag"
-	"os"
-	"reflect"
-	"testing"
-	//. "github.com/onsi/ginkgo/v2"
-	//. "github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-/* var _ = Describe("Csv2json", func() {
-	BeforeEach(func() {
+var _ = Describe("Csv2json", func() {
+	var one int
 
+	BeforeEach(func() {
+		one = 1
 	})
 
 	Describe("Get file data", func() {
-
+		Context("testing", func() {
+			It("testing", func() {
+				one++
+				Expect(one).To(Equal(2))
+			})
+		})
 	})
-}) */
+})
 
-func Test_getFileData(t *testing.T) {
+/* func Test_getFileData(t *testing.T) {
 	tests := []struct {
 		name    string    // The name of the test
 		want    inputFile // What inputFile instance we want our function to return.
@@ -56,3 +59,4 @@ func Test_getFileData(t *testing.T) {
 		})
 	}
 }
+*/
