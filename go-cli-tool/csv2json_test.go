@@ -10,12 +10,9 @@ import (
 )
 
 var _ = Describe("Csv2json", func() {
-	var actualOsArgs []string
 	var defaultInputs, noInputs, semicolonInput, prettyInput, semicolonPrettyInput, unknownSeparatorInput *inputFile
 
 	BeforeEach(func() {
-		actualOsArgs = os.Args
-
 		defaultInputs = &inputFile{
 			filepath:  "test.csv",
 			separator: "comma",
@@ -46,14 +43,13 @@ var _ = Describe("Csv2json", func() {
 	})
 
 	AfterEach(func() {
-		os.Args = actualOsArgs                                           // Restoring the original os.Args reference
-		flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError) // Reseting the Flag command line. So that we can parse flags again
+		// Resetting the flag command line so the flags can be parsed again.
+		flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	})
 
 	Describe("Get file data", func() {
 		Context("when using default parameters", func() {
 			It("should return the filepath provided, comma and false", func() {
-				actualOsArgs = os.Args
 				os.Args = []string{"cmd", "test.csv"}
 				result, err := getFileData()
 
@@ -64,7 +60,6 @@ var _ = Describe("Csv2json", func() {
 
 		Context("when using no parameters", func() {
 			It("should return an error", func() {
-				actualOsArgs = os.Args
 				os.Args = []string{"cmd"}
 				expectedErr := errors.New("a filepath argument is required")
 				result, err := getFileData()
@@ -77,7 +72,6 @@ var _ = Describe("Csv2json", func() {
 
 		Context("when semicolon is enabled", func() {
 			It("should return semicolon as the separator", func() {
-				actualOsArgs = os.Args
 				os.Args = []string{"cmd", "--separator=semicolon", "test.csv"}
 				result, err := getFileData()
 
@@ -88,7 +82,6 @@ var _ = Describe("Csv2json", func() {
 
 		Context("when pretty is enabled", func() {
 			It("should return true", func() {
-				actualOsArgs = os.Args
 				os.Args = []string{"cmd", "--pretty", "test.csv"}
 				result, err := getFileData()
 
@@ -99,7 +92,6 @@ var _ = Describe("Csv2json", func() {
 
 		Context("when semicolon and pretty are enabled", func() {
 			It("should return semicolon and true", func() {
-				actualOsArgs = os.Args
 				os.Args = []string{"cmd", "--pretty", "--separator=semicolon", "test.csv"}
 				result, err := getFileData()
 
@@ -111,7 +103,6 @@ var _ = Describe("Csv2json", func() {
 
 		Context("when an invalid separator is provided", func() {
 			It("should return an error and empty inputFile type", func() {
-				actualOsArgs = os.Args
 				os.Args = []string{"cmd", "--separator=pipe", "test.csv"}
 				expectedErr := errors.New("invalid separator. Use comma or semicolon")
 				result, err := getFileData()
