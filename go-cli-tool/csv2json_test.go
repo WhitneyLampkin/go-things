@@ -68,7 +68,7 @@ var _ = Describe("Csv2json", func() {
 				result, err := getFileData()
 
 				Expect(err).To(BeNil())
-				Expect(result.separator).To(Equal("semicolon"))
+				Expect(result.separator).To(Equal(semicolonInput.separator))
 			})
 		})
 
