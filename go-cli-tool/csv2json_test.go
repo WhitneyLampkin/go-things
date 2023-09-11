@@ -55,9 +55,10 @@ var _ = Describe("Csv2json", func() {
 		Context("when using no parameters", func() {
 			It("should return an error", func() {
 				os.Args = []string{"cmd"}
-				_, err := getFileData()
+				result, err := getFileData()
 
 				Expect(err).To(Equal("a filepath argument is required"))
+				Expect(result).To(Equal(noInputs))
 			})
 		})
 
@@ -69,6 +70,10 @@ var _ = Describe("Csv2json", func() {
 				Expect(err).To(BeNil())
 				Expect(result.separator).To(Equal("semicolon"))
 			})
+		})
+
+		Context("when pretty is enabled", func() {
+			It("should return")
 		})
 	})
 })
