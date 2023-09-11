@@ -51,6 +51,15 @@ var _ = Describe("Csv2json", func() {
 				Expect(result.filepath).To(Equal(defaultInputs.filepath))
 			})
 		})
+
+		Context("when using no parameters", func() {
+			It("should return an error", func() {
+				os.Args = []string{"cmd"}
+				_, err := getFileData()
+
+				Expect(err).To(Equal("a filepath argument is required"))
+			})
+		})
 	})
 })
 
