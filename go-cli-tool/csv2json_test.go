@@ -60,6 +60,16 @@ var _ = Describe("Csv2json", func() {
 				Expect(err).To(Equal("a filepath argument is required"))
 			})
 		})
+
+		Context("when semicolon is enabled", func() {
+			It("should return semicolon as the separator", func() {
+				os.Args = []string{"cmd", "--separator=semicolon", "test.csv"}
+				result, err := getFileData()
+
+				Expect(err).To(BeNil())
+				Expect(result.separator).To(Equal("semicolon"))
+			})
+		})
 	})
 })
 
