@@ -1,22 +1,42 @@
 package main
 
 import (
+	"os"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Csv2json", func() {
 	var one int
+	var defaultInputs *inputFile //, noInputs, semicolonInput, prettyInput, semicolonPrettyInput, noSeparatorInput *inputFile
 
 	BeforeEach(func() {
 		one = 1
+
+		defaultInputs = &inputFile{
+			filepath:  "test.csv",
+			separator: "comma",
+			pretty:    false,
+		}
 	})
 
 	Describe("Get file data", func() {
-		Context("testing", func() {
-			It("testing", func() {
+		Context("when testing the value of one", func() {
+			It("should return 2 after the count is incremented", func() {
 				one++
 				Expect(one).To(Equal(2))
+			})
+		})
+
+		Context("when using default parameters", func() {
+			It("should return the filepath provided, comma and false", func() {
+				//actualOsArgs := os.Args
+				os.Args = []string{"cmd", "test.csv"}
+				result, err := getFileData()
+
+				Expect(err).To(BeNil())
+				Expect(result.filepath).To(Equal(defaultInputs.filepath))
 			})
 		})
 	})
