@@ -40,6 +40,8 @@ func getFileData() (inputFile, error) {
 		return inputFile{}, errors.New("invalid separator. Use comma or semicolon")
 	}
 
+	fmt.Println(*pretty)
+
 	// Return inputFile with validated arguments
 	return inputFile{fileLocation, *separator, *pretty}, nil
 }
