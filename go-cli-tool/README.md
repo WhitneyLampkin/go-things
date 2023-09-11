@@ -4,5 +4,6 @@
 
 ## Random Learnings
 
-1. When using `errors.New("")`, error strings should begin with a lowercase letter and end with no punctuation
-2. 
+1. Error strings made with `errors.New("")` should begin with a lowercase letter and end with no punctuation.
+1. The `flag` package is used for 
+1. When testing multiple scenarios with different command line arguments, it's important to reset the flag command line after each test so the new arguments can be parsed.
