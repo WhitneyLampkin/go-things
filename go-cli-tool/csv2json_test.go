@@ -8,27 +8,39 @@ import (
 )
 
 var _ = Describe("Csv2json", func() {
-	var one int
-	var defaultInputs *inputFile //, noInputs, semicolonInput, prettyInput, semicolonPrettyInput, noSeparatorInput *inputFile
+	var defaultInputs, noInputs, semicolonInput, prettyInput, semicolonPrettyInput, unknownSeparatorInput *inputFile
 
 	BeforeEach(func() {
-		one = 1
-
 		defaultInputs = &inputFile{
 			filepath:  "test.csv",
 			separator: "comma",
 			pretty:    false,
 		}
+
+		noInputs = &inputFile{}
+
+		semicolonInput = &inputFile{
+			filepath:  "test.csv",
+			separator: "semicolon",
+			pretty:    false,
+		}
+
+		prettyInput = &inputFile{
+			filepath:  "test.csv",
+			separator: "comma",
+			pretty:    true,
+		}
+
+		semicolonPrettyInput = &inputFile{
+			filepath:  "test.csv",
+			separator: "semicolon",
+			pretty:    true,
+		}
+
+		unknownSeparatorInput = &inputFile{}
 	})
 
 	Describe("Get file data", func() {
-		Context("when testing the value of one", func() {
-			It("should return 2 after the count is incremented", func() {
-				one++
-				Expect(one).To(Equal(2))
-			})
-		})
-
 		Context("when using default parameters", func() {
 			It("should return the filepath provided, comma and false", func() {
 				//actualOsArgs := os.Args
@@ -42,7 +54,11 @@ var _ = Describe("Csv2json", func() {
 	})
 })
 
-/* func Test_getFileData(t *testing.T) {
+/*
+
+//////////// Auto-generated unit test written by VSCode & later modified ////////////
+
+func Test_getFileData(t *testing.T) {
 	tests := []struct {
 		name    string    // The name of the test
 		want    inputFile // What inputFile instance we want our function to return.
