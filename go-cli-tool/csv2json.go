@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 // Struct that stores the user inputted file information needed
@@ -44,6 +45,21 @@ func getFileData() (inputFile, error) {
 
 	// Return inputFile with validated arguments
 	return inputFile{fileLocation, *separator, *pretty}, nil
+}
+
+func checkIfValidFile(fileLocation string) (bool, error) {
+	// Validate file extension (CSV)
+	if fileExtension := filepath.Ext(fileLocation); fileExtension != ".csv" {
+		return false, fmt.Errorf("file %s is not CSV", fileLocation)
+	}
+
+	// Validate file exists
+	if _, err := os.Stat(fileLocation); err != nil && os.IsNotExist(err) {
+		return false, fmt.Errorf("file %s does not exist", fileLocation)
+	}
+
+	// If no errors, the file is valid.
+	return true, nil
 }
 
 func main() {
