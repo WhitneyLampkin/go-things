@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"flag"
+	"fmt"
 	"os"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -59,7 +60,7 @@ var _ = Describe("Csv2json", func() {
 		})
 
 		Context("when using no parameters", func() {
-			It("should return an error", func() {
+			It("should return a filepath argument required error", func() {
 				os.Args = []string{"cmd"}
 				expectedErr := errors.New("a filepath argument is required")
 				result, err := getFileData()
@@ -102,13 +103,47 @@ var _ = Describe("Csv2json", func() {
 		})
 
 		Context("when an invalid separator is provided", func() {
-			It("should return an error and empty inputFile type", func() {
+			It("should return an invalid separator error and empty inputFile type", func() {
 				os.Args = []string{"cmd", "--separator=pipe", "test.csv"}
 				expectedErr := errors.New("invalid separator. Use comma or semicolon")
 				result, err := getFileData()
 
 				Expect(err).To(Equal(expectedErr))
 				Expect(result).To(Equal(*unknownSeparatorInput))
+			})
+		})
+	})
+
+	Describe("Check if valid file", func() {
+		Context("when the file is valid", func() {
+			It("should return true and no error", func() {
+				os.Args = []string{"cmd", "test.csv"}
+				isValid, err := checkIfValidFile(os.Args[1])
+
+				Expect(err).To(BeNil())
+				Expect(isValid).To(Equal(true))
+			})
+		})
+
+		Context("when file ext isn't .csv", func() {
+			It("should return a file is not CSV error", func() {
+				os.Args = []string{"cmd", "test.txt"}
+				expectedErr := fmt.Errorf("file test.txt is not CSV")
+				isValid, err := checkIfValidFile(os.Args[1])
+
+				Expect(err).To(Equal(expectedErr))
+				Expect(isValid).To(Equal(false))
+			})
+		})
+
+		Context("when the file doesn't exist", func() {
+			It("should return a file does not exist error", func() {
+				os.Args = []string{"cmd", "nonexistent_file.csv"}
+				expectedErr := fmt.Errorf("file nonexistent_file.csv does not exist")
+				isValid, err := checkIfValidFile(os.Args[1])
+
+				Expect(err).To(Equal(expectedErr))
+				Expect(isValid).To(Equal(false))
 			})
 		})
 	})
