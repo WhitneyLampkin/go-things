@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/csv"
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 )
@@ -60,6 +62,89 @@ func checkIfValidFile(fileLocation string) (bool, error) {
 
 	// If no errors, the file is valid.
 	return true, nil
+}
+
+// Though go-channels and go-routines are unnecessary, they tutorial uses them for learning purposes
+// This is the first go-routine that both reads and processes each line of the csv file
+func processCsvFile(fileData inputFile, writerChannel chan<- map[string]string) {
+	// Open the file for reading
+	file, err := os.Open(fileData.filepath)
+	// Check that no errors were received
+	check(err)
+	// Ensure that the file is closed after processing
+	defer file.Close()
+
+	// Defining the "headers" and "line" slices to represent the contents of the file
+	var headers, line []string
+	// Initialize reader
+	reader := csv.NewReader(file)
+	// Conditionally update the separator value if semicolon was entered
+	if fileData.separator == "semicolon" {
+		reader.Comma = ';'
+	}
+
+	// Start reading the file
+	// First line will be the headers
+	headers, err = reader.Read()
+	// Check that no errors were received
+	check(err)
+	// Iterate over each line of the csv file
+	for {
+		// Read 1 row (line) of the csv file at a time
+		// Each element is a column
+		line, err = reader.Read()
+		// Check to see if the end of the file was reached
+		if err != nil {
+			// Prefered way by GoLang doc
+			if errors.Is(err, io.EOF) {
+				fmt.Println("Reading file finished...")
+				close(writerChannel)
+				break
+			} else {
+				// Handle unexpected errors
+				exitGracefully(err)
+			}
+		}
+		// Process the current CSV line
+		// Each line is returned as a map[string]string with the key being the column name
+		record, err := processLine(headers, line)
+		if err != nil {
+			// The error returned from processLine would be for an incorrect number of items
+			// This record should be skipped
+			fmt.Printf("Line: %sError: %s\n", line, err)
+			continue
+		}
+
+		// If the record is valid, write it to the channel
+		writerChannel <- record
+	}
+
+}
+
+func exitGracefully(err error) {
+	fmt.Fprintf(os.Stderr, "error: %v\n", err)
+	os.Exit(1)
+}
+
+func check(e error) {
+	if e != nil {
+		exitGracefully(e)
+	}
+}
+
+func processLine(headers []string, dataList []string) (map[string]string, error) {
+	// Validating if we're getting the same number of headers and columns. Otherwise, we return an error
+	if len(dataList) != len(headers) {
+		return nil, errors.New("Line doesn't match headers format. Skipping")
+	}
+	// Creating the map we're going to populate
+	recordMap := make(map[string]string)
+	// For each header we're going to set a new map key with the corresponding column value
+	for i, name := range headers {
+		recordMap[name] = dataList[i]
+	}
+	// Returning our generated map
+	return recordMap, nil
 }
 
 func main() {
