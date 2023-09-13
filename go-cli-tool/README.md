@@ -10,7 +10,7 @@
 1. Error strings made with `errors.New("")` should begin with a lowercase letter and end with no punctuation.
 <!-- 1. The `flag` package is used for  -->
 1. When testing multiple scenarios with different command line arguments, it's important to reset the flag command line after each test so the new arguments can be parsed.
-1. It seems that setting and checking the existence of an `error` can only be done
+1. It seems that setting and checking the existence of an `error` can only be done only the `error` is being used?
 
 
 ## go-csv2json
